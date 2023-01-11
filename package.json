@@ -1,0 +1,19 @@
+{
+  "name": "spen-sav",
+  "version": "1.0.0",
+  "description": "A tract record of my expenses and eranings",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "author": "SaaD Ibne Jamal",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.8.3"
+  }
+}
