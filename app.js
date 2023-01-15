@@ -2,13 +2,12 @@ const express = require('express');
 const mongoose = require("mongoose");
 require('dotenv').config();
 
-const ledgerRouter = require('./src/routes/ledger');
+const router = require('./src/routes');
 
 const app = express();
 
 app.use(express.json());
-
-app.use('/ledger', ledgerRouter);
+app.use('/api', router);
 
 app.use((req, res, next) => {
     next({
