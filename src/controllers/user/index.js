@@ -1,3 +1,5 @@
+const { hash } = require('bcrypt');
+
 const User = require('./../../models/User');
 
 const getUsers = async (req, res, next) => {
@@ -63,6 +65,45 @@ const getUsers = async (req, res, next) => {
     }
 };
 
+const createUser = async (req, res, next) => {
+    try {
+        const {
+            email,
+            firstName,
+            lastName,
+            password,
+            role,
+            status,
+        } = req.body;
+
+        const hashedPassword = await hash(password, 10);
+
+        const user = new User({
+            email,
+            firstName,
+            lastName,
+            password: hashedPassword,
+        });
+
+        if (role) {
+            user.role = role;
+        }
+
+        if(status) {
+            user.status = status;
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            user,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getUsers,
+    createUser,
 }
