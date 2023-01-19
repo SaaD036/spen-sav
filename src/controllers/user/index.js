@@ -1,6 +1,9 @@
 const { hash } = require('bcrypt');
 
 const User = require('./../../models/User');
+const {
+    userStatus,
+} = require('./../../constants/user');
 
 const getUsers = async (req, res, next) => {
     try {
@@ -103,7 +106,127 @@ const createUser = async (req, res, next) => {
     }
 };
 
+const getOneUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        if(!id) {
+            next({
+                status: 403,
+                message: 'user id is requered',
+            });
+            return;
+        }
+
+        const user = await User.findById(id, {
+            updatedAt: 0,
+            createdAt: 0,
+            __v: 0,
+            entry: 0,
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                errors: 'user not found',
+            })
+        }
+
+        return res.status(200).json({
+            user,
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+const updateUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const {
+            email,
+            firstName,
+            lastName,
+        } = req.body;
+
+        if(!id) {
+            next({
+                status: 403,
+                message: 'user id is requered',
+            });
+            return;
+        }
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                errors: 'user not found',
+            })
+        }
+
+        if (email) {
+            return res.status(403).json({
+                errors: 'email can not be updated',
+            })
+        };
+        if (firstName && firstName.trim().length > 0) user.firstName = firstName.trim();
+        if (lastName && lastName.trim().length > 0) user.lastName = lastName.trim();
+
+        await user.save();
+
+        return res.status(200).json({
+            user,
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+const deleteUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        if(!id) {
+            next({
+                status: 403,
+                message: 'user id is requered',
+            });
+            return;
+        }
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                errors: 'user not found',
+            })
+        }
+
+        user.status = userStatus.DELETED;
+
+        user.save();
+
+        return res.status(200).json({
+            message: 'user is deleted',
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+const getUserComment = async (req, res, next) => {
+    
+}
+
+const getUserEntry = async (req, res, next) => {
+    
+}
+
 module.exports = {
     getUsers,
     createUser,
+    getOneUser,
+    updateUser,
+    deleteUser,
 }
