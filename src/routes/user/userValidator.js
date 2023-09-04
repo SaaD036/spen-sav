@@ -34,7 +34,7 @@ const createUserValidtor = [
         .custom(value => {
             return value.trim().length > 0;
         })
-        .withMessage('last name should exist'),
+        .withMessage('Last name should exist'),
 ];
 
 module.exports = {
