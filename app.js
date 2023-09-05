@@ -11,6 +11,12 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', router);
 
+app.use('/', (req, res, next) => {
+    return res.status(200).json({
+        message: 'successfull',
+    });
+});
+
 app.use((req, res, next) => {
     next({
         status: 404,
