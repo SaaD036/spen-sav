@@ -1,6 +1,8 @@
 const { hash } = require('bcrypt');
 
 const User = require('./../../models/User');
+const Comment = require('../../models/Comment');
+
 const {
     userStatus,
 } = require('./../../constants/user');
@@ -216,7 +218,31 @@ const deleteUser = async (req, res, next) => {
 }
 
 const getUserComment = async (req, res, next) => {
-    
+    try {
+        const { id } = req.params;
+
+        if(!id) {
+            next({
+                status: 403,
+                message: 'user id is requered',
+            });
+
+            return;
+        }
+
+        const [comments, commentsCount] = await Promise.all([
+            Comment.find({ userId: id }),
+            Comment.count({ userId: id })
+        ]);
+
+        return res.status(200).json({
+            comments,
+            count: commentsCount
+        })
+
+    } catch (error) {
+        next(error);
+    }
 }
 
 const getUserEntry = async (req, res, next) => {
@@ -229,4 +255,6 @@ module.exports = {
     getOneUser,
     updateUser,
     deleteUser,
+    getUserComment,
+    getUserEntry,
 }
