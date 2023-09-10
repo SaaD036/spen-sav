@@ -2,10 +2,18 @@ const Comment = require('../../models/Comment');
 
 const getAllComments = async (req, res, next) => {
     try {
+        const { content, user_id } = req.query;
+        
+        const filter = {};
+        content ? filter.content = content.trim() : null;
+        user_id ? filter.userId = user_id : null;
+
         const [comments, commentsCount] = await Promise.all([
-            Comment.find(),
+            Comment.find(filter)
+                .populate('entryId'),
             Comment.count(),
         ]);
+
 
         return res.status(200).json({
             comments,

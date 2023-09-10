@@ -231,7 +231,15 @@ const getUserComment = async (req, res, next) => {
         }
 
         const [comments, commentsCount] = await Promise.all([
-            Comment.find({ userId: id }),
+            Comment.find({ userId: id })
+                .populate({
+                    path: 'entryId',
+                    select: { _id: 1, amount: 1 },
+                    populate: {
+                        path: 'userId',
+                        select: { _id: 1, firstName: 1, lastName: 1 },
+                    },
+                }),
             Comment.count({ userId: id })
         ]);
 
