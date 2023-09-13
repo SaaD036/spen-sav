@@ -1,4 +1,8 @@
+const Entry = require('../../models/Ledger');
+
 const { getEntriesWithFilter } = require('../../services/entry');
+
+const { ledgerType } = require('../../constants/ledger');
 
 const getAllEntry = async (req, res, next) => {
     try {
@@ -39,7 +43,21 @@ const getAllEntry = async (req, res, next) => {
     }
 };
 
-const createEntry = async (req, res, next) => {};
+const createEntry = async (req, res, next) => {
+    const { amount, type=ledgerType.SPENDING } = req.body;
+
+    const entry = new Entry({
+        amount: parseInt(amount),
+        type,
+        userId: '63c2b8d011dab7299f3545b2',
+    });
+
+    await entry.save();
+
+    return res.status(200).json({
+        message: 'entry created',
+    });
+};
 
 module.exports = {
     getAllEntry,
