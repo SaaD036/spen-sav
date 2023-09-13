@@ -1,5 +1,3 @@
-const Entry = require('../../models/Ledger');
-
 const { getEntriesWithFilter } = require('../../services/entry');
 
 const getAllEntry = async (req, res, next) => {
@@ -7,6 +5,7 @@ const getAllEntry = async (req, res, next) => {
         const { amount, name, operator = '$gte', page = 1, limit = 25 } = req.query;
         
         let filter = {};
+        const updatedEntries = [];
 
         if (amount) {
             filter.amount = {
@@ -14,11 +13,25 @@ const getAllEntry = async (req, res, next) => {
             };
         }
         
-        const {entries, entryCount} = await getEntriesWithFilter(filter, { name });
+        const {entries, entryCount} = await getEntriesWithFilter(
+            filter,
+            { name },
+            parseInt(page),
+            parseInt(limit)
+        );
 
+        (entries || []).forEach(entry => {
+            updatedEntries.push({
+                _id: entry._id,
+                amount: entry.amount,
+                type: entry.type,
+                totalComment: (entry.comments || []).length,
+                user: entry.user,
+            });
+        });
 
         return res.status(200).json({
-            entries,
+            entries: updatedEntries,
             count: entryCount,
         });
     } catch (error) {
