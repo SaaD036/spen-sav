@@ -13,7 +13,6 @@ const createUserValidtor = [
             });
 
             if (user !== null) {
-                console.log('User Exists');
                 return Promise.reject();
             }
         })
