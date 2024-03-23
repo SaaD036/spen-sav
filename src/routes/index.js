@@ -12,6 +12,6 @@ const router = express.Router();
 router.use('/auth', authRouter);
 router.use('/user', userRouter);
 router.use('/comment', commentRouter);
-router.use('/enrty', entryRouter);
+router.use('/entry', entryRouter);
 
 module.exports = router;
