@@ -28,6 +28,6 @@ const commentSchema = new Schema({
     timestamps: true
 });
 
-const Comment = model('Ledger', commentSchema);
+const Comment = model('Comment', commentSchema);
 
 module.exports = Comment;
