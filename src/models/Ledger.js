@@ -31,10 +31,10 @@ const ledgerSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    creator: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-    }],
+    // creator: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User',
+    // }],
 },
 {
     timestamps: true
